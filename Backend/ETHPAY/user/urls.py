@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import UserViewSet
-
-user_list = UserViewSet.as_view({
-    'post': 'register'
-})
-
+from .views import CustomTokenObtainPairView, RegisterView
+from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
-    path('register/', user_list, name='user-register'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path("login/", CustomTokenObtainPairView.as_view(), name="login"),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 ]
+
+
