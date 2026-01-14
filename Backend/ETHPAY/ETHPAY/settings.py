@@ -39,9 +39,30 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
+
     'api',
+    'bank',
+    'corsheaders',
+    'user.apps.UserConfig'
 ]
+
+AUTH_USER_MODEL = "user.User"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -85,7 +106,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'ETHPAY@6',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '1818',
     }
 }
 

@@ -1,20 +1,28 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from .managers import UserManager
 
-# Create your models here.
+class User(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = (
+        ("ADMIN", "Admin"),
+        ("MERCHANT", "Merchant"),
+        ("CUSTOMER", "Customer"),
+    )
 
-from django.contrib.auth.hashers import make_password
-
-class User(models.Model):
-    userId = models.ObjectIdField(primary_key=True, editable=False)
-    fullName = models.CharField(max_length=100)
-    companyName = models.CharField(max_length=100, blank=True, null=True)
-    phoneNumber = models.CharField(max_length=15, blank=True, null=True)
     email = models.EmailField(unique=True)
-    passwordHash = models.CharField(max_length=128)
-    role = models.CharField(max_length=20, default='endUser')
-    createdAt = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, default='pending')
+    full_name = models.CharField(max_length=150)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="CUSTOMER")
 
-    def set_password(self, raw_password):
-        self.passwordHash = make_password(raw_password)
-        self.save()
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["full_name"]
+
+    def __str__(self):
+        return self.email
